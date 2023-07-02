@@ -104,7 +104,9 @@ def load_command_table(self, _):
                             custom_command_type=mysql_custom,
                             client_factory=cf_mysql_advanced_threat_protection) as g:
         g.custom_command('update', 'flexible_server_threat_model_update_func')
-        
+        g.custom_show_command('show', 'flexible_server_threat_model_show_func')
+        g.custom_command('list', 'flexible_server_threat_model_list_func')
+
     with self.command_group('mysql flexible-server import', mysql_flexible_servers_sdk,
                             custom_command_type=mysql_custom,
                             client_factory=cf_mysql_flexible_servers, is_preview=True) as g:

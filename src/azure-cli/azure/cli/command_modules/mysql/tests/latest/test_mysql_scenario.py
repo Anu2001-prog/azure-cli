@@ -84,6 +84,11 @@ class FlexibleServerMgmtScenarioTest(ScenarioTest):
 
     @AllowLargeResponse()
     @ResourceGroupPreparer(location=DEFAULT_LOCATION)
+    def test_mysql_flexible_server_threat_model_update_mgmt(self, resource_group):
+        self._test_mysql_flexible_server_threat_model_update_mgmt('mysql', resource_group)    
+
+    @AllowLargeResponse()
+    @ResourceGroupPreparer(location=DEFAULT_LOCATION)
     def test_mysql_flexible_server_mgmt(self, resource_group):
         self._test_flexible_server_mgmt('mysql', resource_group)
     
@@ -213,7 +218,16 @@ class FlexibleServerMgmtScenarioTest(ScenarioTest):
         self.cmd('{} flexible-server delete -g {} -n {} --yes'.format(database_engine, resource_group, server_name), checks=NoneCheck())
 
         self.cmd('{} flexible-server delete -g {} -n {} --yes'.format(database_engine, resource_group, restore_server_name), checks=NoneCheck())
+    
+    def _test_mysql_flexible_server_threat_model_update_mgmt(self, database_engine, resource_group):
+        # single server which will be used for threat detection policy update
+        server_name = self.create_random_name(SERVER_NAME_PREFIX, SERVER_NAME_MAX_LENGTH)
+        location = 'westus2'
+        storage_size = 51200
+        version = '5.7'
+        self.cmd('{} server create -g {} -n {} -l {} --storage-size {} --version {}'.format(database_engine, resource_group, server_name, location, storage_size, version))
 
+        
     def _test_mysql_flexible_server_import_create_mgmt(self, database_engine, resource_group):
         # single server which will be used for import
         ss_server_name = self.create_random_name(SERVER_NAME_PREFIX, SERVER_NAME_MAX_LENGTH)
